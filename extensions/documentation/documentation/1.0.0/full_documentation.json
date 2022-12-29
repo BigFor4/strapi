@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "12/29/2022 10:04:53 AM"
+    "x-generation-date": "12/29/2022 3:38:45 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -556,7 +556,7 @@
         ]
       }
     },
-    "/getTree": {
+    "/getTree/{fileid}": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -610,7 +610,18 @@
         "tags": [
           "Objectinfo"
         ],
-        "parameters": []
+        "parameters": [
+          {
+            "name": "fileid",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/email/": {
@@ -2863,10 +2874,10 @@
             "type": "string"
           },
           "parent": {
-            "type": "string"
+            "type": "Object"
           },
           "projectid": {
-            "type": "string"
+            "type": "Object"
           }
         }
       },
@@ -2885,10 +2896,10 @@
             "type": "string"
           },
           "parent": {
-            "type": "string"
+            "type": "Object"
           },
           "projectid": {
-            "type": "string"
+            "type": "Object"
           },
           "created_by": {
             "type": "string"

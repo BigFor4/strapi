@@ -50,7 +50,7 @@
     },
     {
       "method": "GET",
-      "path": "/getTree",
+      "path": "/getTree/:fileid",
       "handler": "objectinfo.getTree",
       "config": {
         "policies": []

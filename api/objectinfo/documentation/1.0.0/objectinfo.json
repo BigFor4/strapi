@@ -511,7 +511,7 @@
         ]
       }
     },
-    "/getTree": {
+    "/getTree/{fileid}": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -565,7 +565,18 @@
         "tags": [
           "Objectinfo"
         ],
-        "parameters": []
+        "parameters": [
+          {
+            "name": "fileid",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     }
   },
@@ -592,10 +603,10 @@
             "type": "string"
           },
           "parent": {
-            "type": "string"
+            "type": "Object"
           },
           "projectid": {
-            "type": "string"
+            "type": "Object"
           }
         }
       },
@@ -614,10 +625,10 @@
             "type": "string"
           },
           "parent": {
-            "type": "string"
+            "type": "Object"
           },
           "projectid": {
-            "type": "string"
+            "type": "Object"
           },
           "created_by": {
             "type": "string"
