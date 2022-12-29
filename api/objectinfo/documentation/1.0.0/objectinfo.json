@@ -603,7 +603,7 @@
             "type": "string"
           },
           "parent": {
-            "type": "object"
+            "type": "string"
           },
           "projectid": {
             "type": "object"
@@ -625,7 +625,7 @@
             "type": "string"
           },
           "parent": {
-            "type": "object"
+            "type": "string"
           },
           "projectid": {
             "type": "object"
