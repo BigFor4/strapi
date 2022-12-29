@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "datas",
+  "info": {
+    "name": "objectinfo",
+    "description": ""
+  },
+  "options": {
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ],
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "guid": {
+      "type": "string"
+    },
+    "inf": {
+      "type": "string"
+    },
+    "fileid": {
+      "type": "string"
+    },
+    "parent": {
+      "type": "string"
+    },
+    "projectid": {
+      "type": "string"
+    }
+  }
+}

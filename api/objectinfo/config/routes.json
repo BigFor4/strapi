@@ -1,0 +1,60 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/objectinfos",
+      "handler": "objectinfo.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/objectinfos/count",
+      "handler": "objectinfo.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/objectinfos/:id",
+      "handler": "objectinfo.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/objectinfos",
+      "handler": "objectinfo.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/objectinfos/:id",
+      "handler": "objectinfo.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/objectinfos/:id",
+      "handler": "objectinfo.delete",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getTree",
+      "handler": "objectinfo.getTree",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
