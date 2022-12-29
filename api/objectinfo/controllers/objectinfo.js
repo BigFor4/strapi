@@ -3,16 +3,19 @@
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
  */
-
+const {
+  Types: { ObjectId: ObjectId },
+} = require("mongoose");
 module.exports = {
   async getTree(ctx) {
     const { fileid } = ctx.params
+    let parent = ObjectId('ffffffffffffffffffffffff')
     const rootNodes = await strapi.query('objectinfo').model.aggregate([
       {
         $match: {
-          $or: [
+          $and: [
             { fileid },
-            { parent: "ffffffffffffffffffffffff" }
+            { parent }
           ]
         }
       },
@@ -143,13 +146,14 @@ module.exports = {
           children: "$children.presentChild"
         }
       }
-    ]).lean().exec();
+    ]);
+    // const tree = await this.getTreeRecursive(rootNodes, fileid, 5);
     return rootNodes;
   },
   async getTreeRecursive(nodes, fileid, count) {
     const tree = [];
     for (const node of nodes) {
-      const children = await strapi.query('objectinfo').model.find({ parent: node._id , fileid }).lean().exec();
+      const children = await strapi.query('objectinfo').model.find({ parent: node._id, fileid }).lean().exec();
       if (children && children.length > 0 && count > 0) {
         node.children = await this.getTreeRecursive(children, fileid, count - 1);
       }

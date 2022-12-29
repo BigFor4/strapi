@@ -26,11 +26,11 @@
       "type": "string"
     },
     "parent": {
-      "type": "Object",
+      "type": "json",
       "index": true
     },
     "projectid": {
-      "type": "Object"
+      "type": "object"
     }
   }
 }

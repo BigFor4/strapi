@@ -603,10 +603,10 @@
             "type": "string"
           },
           "parent": {
-            "type": "Object"
+            "type": "object"
           },
           "projectid": {
-            "type": "Object"
+            "type": "object"
           }
         }
       },
@@ -625,10 +625,10 @@
             "type": "string"
           },
           "parent": {
-            "type": "Object"
+            "type": "object"
           },
           "projectid": {
-            "type": "Object"
+            "type": "object"
           },
           "created_by": {
             "type": "string"
