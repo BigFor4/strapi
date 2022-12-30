@@ -50,8 +50,16 @@
     },
     {
       "method": "GET",
-      "path": "/getTree/:fileid",
-      "handler": "objectinfo.getTree",
+      "path": "/getTreeObjectInfo/:fileid",
+      "handler": "objectinfo.getTreeObjectInfo",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/getTreeGuid",
+      "handler": "objectinfo.getTreeGuid",
       "config": {
         "policies": []
       }

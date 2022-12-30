@@ -7,7 +7,7 @@ const {
   Types: { ObjectId: ObjectId },
 } = require("mongoose");
 module.exports = {
-  async getTree(ctx) {
+  async getTreeObjectInfo(ctx) {
     const { fileid } = ctx.params
     let parent = ObjectId('ffffffffffffffffffffffff')
     const rootNodes = await strapi.query('objectinfo').model.aggregate([
@@ -26,7 +26,7 @@ module.exports = {
       },
       {
         $graphLookup: {
-          from: "ObjectInfor",
+          from: "datas",
           startWith: "$_id",
           connectFromField: "_id",
           connectToField: "parent",
@@ -76,7 +76,7 @@ module.exports = {
             $first: '$_id',
           },
           title: {
-            $first: '$title',
+            $first: '$name',
           },
           type: {
             $first: '$type',
