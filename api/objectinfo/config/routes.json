@@ -49,8 +49,8 @@
       }
     },
     {
-      "method": "GET",
-      "path": "/getTreeObjectInfo/:fileid",
+      "method": "POST",
+      "path": "/getTreeObjectInfo",
       "handler": "objectinfo.getTreeObjectInfo",
       "config": {
         "policies": []
@@ -60,6 +60,22 @@
       "method": "POST",
       "path": "/getTreeGuid",
       "handler": "objectinfo.getTreeGuid",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/searchObjectInfor",
+      "handler": "objectinfo.searchObjectInfor",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/getMultipleObjectInfor",
+      "handler": "objectinfo.getMultipleObjectInfor",
       "config": {
         "policies": []
       }
