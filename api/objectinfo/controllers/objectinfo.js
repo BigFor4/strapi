@@ -1,7 +1,7 @@
 'use strict';
 
 const { sanitizeEntity } = require("strapi-utils/lib");
-const { searchTreeNode, shortenTree, setTitleRoot } = require("../../../lib/tree");
+const { searchTreeNode, shortenTree, setTitleRoot } = require("../../../tree");
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
