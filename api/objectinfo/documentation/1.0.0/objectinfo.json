@@ -511,10 +511,10 @@
         ]
       }
     },
-    "/getTreeObjectInfo/{fileid}": {
-      "get": {
+    "/getTreeObjectInfo": {
+      "post": {
         "deprecated": false,
-        "description": "",
+        "description": "Create a new record",
         "responses": {
           "200": {
             "description": "response",
@@ -565,18 +565,21 @@
         "tags": [
           "Objectinfo"
         ],
-        "parameters": [
-          {
-            "name": "fileid",
-            "in": "path",
-            "description": "",
-            "deprecated": false,
-            "required": true,
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "foo": {
+                    "type": "string"
+                  }
+                }
+              }
             }
           }
-        ]
+        }
       }
     },
     "/getTreeGuid": {

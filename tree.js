@@ -43,13 +43,23 @@ function searchTreeNode(data, key, match) {
   return null;
 }
 
-function searchTreeNodeForTowParents(data, key, match) {
+function searchTreeNodeForTowParents(data, match) {
   const nodes = []
-  let node = searchTreeNodeForParent(data, key, match)
-  while (node) {
-    if(nodes.length < 2)
-    nodes.push(node.GUID)
+  const searchParent = (dataTree, match) => {
+    dataTree.map(item => {
+      if(nodes.length < 2){
+        if(item.children?.find(x=> x.key.toString() === match)){
+          if(item.GUID){
+            nodes.unshift(item);
+          }
+          searchParent(data , item.key)
+        }else if (item.children){
+          searchParent(item.children ,  match)
+        }
+      }
+    })
   }
+  searchParent(data, match)
   return nodes
 }
 function searchTreeNodeForParent(data, key, match) {

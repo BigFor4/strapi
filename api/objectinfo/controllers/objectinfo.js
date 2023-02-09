@@ -1,7 +1,7 @@
 'use strict';
 
 const { sanitizeEntity } = require("strapi-utils/lib");
-const { searchTreeNode, shortenTree, setTitleRoot } = require("../../../tree");
+const { searchTreeNode, shortenTree, setTitleRoot , searchTreeNodeForTowParents} = require("../../../tree");
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
@@ -15,7 +15,7 @@ module.exports = {
   async getTreeObjectInfo(ctx) {
     const { modelType, fileid } = ctx.request.body
     let parent = ObjectId('ffffffffffffffffffffffff')
-    const rootNodes = await strapi.query('objectinfor').model.aggregate([
+    const rootNodes = await strapi.query('objectinfo').model.aggregate([
       {
         $match: {
           $and: [
@@ -32,7 +32,7 @@ module.exports = {
       },
       {
         $graphLookup: {
-          from: "objectinfors",
+          from: "datas",
           startWith: "$_id",
           connectFromField: "_id",
           connectToField: "parent",
@@ -200,7 +200,7 @@ module.exports = {
     const { guids, fileid , modelType} = ctx.request.body;
     let rootNodes = [];
     const getDataGuid = async (guid) => {
-      let data = await strapi.query('objectinfor').model.aggregate([
+      let data = await strapi.query('objectinfo').model.aggregate([
         {
           $match: {
             $and: [{ fileid }, { guid }],
@@ -208,7 +208,7 @@ module.exports = {
         },
         {
           $lookup: {
-            from: 'objectinfors',
+            from: 'datas',
             localField: '_id',
             foreignField: '_id',
             as: 'data',
@@ -250,7 +250,7 @@ module.exports = {
         },
         {
           $graphLookup: {
-            from: 'objectinfors',
+            from: 'datas',
             startWith: '$_id',
             connectFromField: '_id',
             connectToField: 'parent',
@@ -433,18 +433,24 @@ module.exports = {
         }
       }))
     } else if (guids) {
-      let allParentGuid = await strapi.query('objectinfor').model.aggregate([
+      let allParentGuid = await strapi.query('objectinfo').model.aggregate([
         {
           $match: {
             $and: [
               { fileid },
-              { parent: ObjectId('ffffffffffffffffffffffff') }
+              { parent : ObjectId("ffffffffffffffffffffffff") },
+              { type: { $ne: 5 } }
             ]
           }
         },
         {
+          $addFields: {
+            key: '$_id',
+          }
+        },
+        {
           $graphLookup: {
-            from: "objectinfors",
+            from: "datas",
             startWith: "$_id",
             connectFromField: "_id",
             connectToField: "parent",
@@ -457,37 +463,209 @@ module.exports = {
           $match: {
             "children.guid": guids
           }
-        }
-      ]);
-      let guidSearch = {}
-      if(allParentGuid[0]?.children){
-        for(var i =0 ; i < allParentGuid[0].children.length ; i++){
-          let item = allParentGuid[0].children[i]
-          if(item.guid === guids){
-            guidSearch = item
+        },
+        {
+          $addFields: {
+            children: {
+              $map: {
+                input: '$children',
+                as: 'child',
+                in: {
+                  _id: '$$child._id',
+                  key: '$$child._id',
+                  node: '$$child._id',
+                  parent: '$$child.parent',
+                  title: '$$child.inf',
+                  GUID: '$$child.guid',
+                  type: '$$child.type',
+                  fileid: '$$child.fileid',
+                  projectid: '$$child.projectid',
+                  level: '$$child.level',
+                },
+              },
+            },
+          },
+        },
+        {
+          $unwind: {
+            path: "$children",
+            preserveNullAndEmptyArrays: true
           }
-        }
-      }
-      let newGuids = [];
-      const getTwoParentGuid = (tree , node) => {
-        tree.map(item => {
-          if(newGuids.length < 3){
-            let data = item.children.find(x => x._id.toString() === node.parent.toString());
-            if(data){
-              let findGuid = item.children.find(x => x.parent.toString() === data._id.toString() && x.type === 10);
-              if(findGuid?.guid && !newGuids.includes(findGuid.guid)){
-                newGuids.unshift(findGuid.guid);
-              }
-              getTwoParentGuid(tree , data)
-            } else {
-              if(item?.guid && !newGuids.includes(item.guid)){
-                newGuids.unshift(item.guid);
+        },
+        {
+          $sort: {
+            "children.level": -1
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            parent: {
+              $first: '$parent',
+            },
+            key: {
+              $first: '$_id',
+            },
+            node: {
+              $first: '$_id',
+            },
+            title: {
+              $first: '$inf',
+            },
+            type: {
+              $first: '$type',
+            },
+            GUID: {
+              $first: '$guid',
+            },
+            fileid: {
+              $first: '$fileid',
+            },
+            projectid: {
+              $first: '$projectid',
+            },
+            children: {
+              $push: '$children',
+            },
+          },
+        },
+        {
+          $addFields: {
+            children: {
+              $reduce: {
+                input: "$children",
+                initialValue: {
+                  level: -1,
+                  presentChild: [],
+                  prevChild: []
+                },
+                in: {
+                  $let: {
+                    vars: {
+                      prev: {
+                        $cond: [
+                          {
+                            $eq: [
+                              "$$value.level",
+                              "$$this.level"
+                            ]
+                          },
+                          "$$value.prevChild",
+                          "$$value.presentChild"
+                        ]
+                      },
+                      current: {
+                        $cond: [
+                          {
+                            $eq: [
+                              "$$value.level",
+                              "$$this.level"
+                            ]
+                          },
+                          "$$value.presentChild",
+                          []
+                        ]
+                      }
+                    },
+                    in: {
+                      level: "$$this.level",
+                      prevChild: "$$prev",
+                      presentChild: {
+                        $concatArrays: [
+                          "$$current",
+                          [
+                            {
+                              $mergeObjects: [
+                                "$$this",
+                                {
+                                  children: {
+                                    $filter: {
+                                      input: "$$prev",
+                                      as: "e",
+                                      cond: {
+                                        $eq: [
+                                          "$$e.parent",
+                                          "$$this._id"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  }
+                }
               }
             }
           }
-        })
-      }
-      getTwoParentGuid(allParentGuid , guidSearch)
+        },
+        {
+          $addFields: {
+            id: "$_id",
+            children: "$children.presentChild"
+          }
+        }
+      ]).allowDiskUse(true)
+      let guidSearch = await strapi.query('objectinfo').model.aggregate([
+        {
+          $match: {
+            $and: [
+              { fileid },
+              { guid: guids }
+            ]
+          }
+        },
+        {
+          $addFields: {
+            key: '$_id',
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            parent: {
+              $first: '$parent',
+            },
+            key: {
+              $first: '$_id',
+            },
+            node: {
+              $first: '$_id',
+            },
+            title: {
+              $first: '$inf',
+            },
+            type: {
+              $first: '$type',
+            },
+            GUID: {
+              $first: '$guid',
+            },
+            fileid: {
+              $first: '$fileid',
+            },
+            projectid: {
+              $first: '$projectid',
+            },
+            children: {
+              $push: '$children',
+            },
+          },
+        },
+      ]).allowDiskUse(true)
+
+      let newGuids = [];
+      let data = shortenTree(modelType, [...allParentGuid], "", [], 0, "")
+      let twoParent = searchTreeNodeForTowParents(data.data, guidSearch[0].key.toString())?.filter(x => x) || [];
+      twoParent.map(item => {
+        if(item.GUID){
+          newGuids.push(item.GUID)
+        }
+      })
       if(!newGuids.includes(guids)){
         newGuids.push(guids)
       }
@@ -535,18 +713,18 @@ module.exports = {
 
     getListHashModel(dataTree)
     if (search && search !== '') {
-      entities = await strapi.query('objectinfor').model.find({ $and: [{ inf: { '$regex': search, '$options': 'i' } }, { fileid: { $in: listHashModel } }] })
+      entities = await strapi.query('objectinfo').model.find({ $and: [{ inf: { '$regex': search, '$options': 'i' } }, { fileid: { $in: listHashModel } }] })
         .sort({ createdAt: 'desc' })
         .skip(startIndex)
         .limit(limit)
     } else {
-      entities = await strapi.query('objectinfor').model.find({ fileid: { $in: listHashModel } })
+      entities = await strapi.query('objectinfo').model.find({ fileid: { $in: listHashModel } })
         .sort({ createdAt: 'desc' })
         .skip(startIndex)
         .limit(limit)
     }
     entities.map(entity =>
-      sanitizeEntity(entity, { model: strapi.models.objectinfor })
+      sanitizeEntity(entity, { model: strapi.models.objectinfo })
     );
     return entities
   },
@@ -554,9 +732,9 @@ module.exports = {
     const user = ctx.state.user;
     const { listIdObj } = ctx.request.body;
     if (!user) return ctx.unauthorized();
-    let entities = await strapi.query('objectinfor').find({ _id: { $in: listIdObj } })
+    let entities = await strapi.query('objectinfo').find({ _id: { $in: listIdObj } })
     entities.map(entity =>
-      sanitizeEntity(entity, { model: strapi.models.objectinfor })
+      sanitizeEntity(entity, { model: strapi.models.objectinfo })
     );
     return entities
   }
