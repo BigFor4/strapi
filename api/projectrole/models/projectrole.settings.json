@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "projectroles",
+  "info": {
+    "name": "projectrole"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "roleName": {
+      "type": "string"
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "project_owner",
+        "project_manager",
+        "project_collaborator",
+        "project_viewer"
+      ]
+    }
+  }
+}

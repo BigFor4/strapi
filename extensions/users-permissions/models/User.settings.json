@@ -95,6 +95,14 @@
     },
     "birthday": {
       "type": "date"
+    },
+    "projectusergroup": {
+      "via": "users",
+      "model": "projectusergroup"
+    },
+    "projects": {
+      "via": "users",
+      "collection": "project"
     }
   }
 }

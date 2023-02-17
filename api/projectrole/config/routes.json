@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/projectroles",
+      "handler": "projectrole.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/projectroles/count",
+      "handler": "projectrole.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/projectroles/:id",
+      "handler": "projectrole.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/projectroles",
+      "handler": "projectrole.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/projectroles/:id",
+      "handler": "projectrole.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/projectroles/:id",
+      "handler": "projectrole.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

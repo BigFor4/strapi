@@ -1,0 +1,60 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/projectusergroups",
+      "handler": "projectusergroup.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/projectusergroups/count",
+      "handler": "projectusergroup.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/projectusergroups/:id",
+      "handler": "projectusergroup.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/projectusergroups",
+      "handler": "projectusergroup.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/projectusergroups/:id",
+      "handler": "projectusergroup.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/projectusergroups/:id",
+      "handler": "projectusergroup.delete",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/updateAccessControl/:projectId",
+      "handler": "projectusergroup.updateAccessControl",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

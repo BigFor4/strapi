@@ -1,0 +1,96 @@
+{
+  "kind": "collectionType",
+  "connection": "default",
+  "collectionName": "project",
+  "info": {
+    "name": "project",
+    "description": ""
+  },
+  "options": {
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ],
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "sort": {
+      "type": "integer",
+      "default": 0
+    },
+    "created": {
+      "type": "datetime"
+    },
+    "tilesetData": {
+      "type": "json"
+    },
+    "isActive": {
+      "type": "boolean",
+      "index": true
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "desc": {
+      "type": "text"
+    },
+    "coordinateSystem": {
+      "type": "string"
+    },
+    "elevationSystem": {
+      "type": "string"
+    },
+    "isPublic": {
+      "type": "boolean",
+      "index": true
+    },
+    "treeData": {
+      "type": "json"
+    },
+    "isDeleted": {
+      "type": "boolean",
+      "index": true
+    },
+    "version": {
+      "type": "string"
+    },
+    "headingRotation": {
+      "type": "float",
+      "default": 0
+    },
+    "isOrganizationTemplate": {
+      "type": "boolean"
+    },
+    "isSystemTemplate": {
+      "type": "boolean"
+    },
+    "decidimConnector": {
+      "type": "json"
+    },
+    "storage": {
+      "type": "float"
+    },
+    "thumbnailFromViewpoint": {
+      "type": "boolean",
+      "default": true
+    },
+    "cloneData": {
+      "type": "json"
+    },
+    "reportSetting": {
+      "type": "json"
+    },
+    "users": {
+      "plugin": "users-permissions",
+      "collection": "user",
+      "via": "projects",
+      "dominant": true
+    }
+  }
+}

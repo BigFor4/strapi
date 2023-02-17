@@ -1346,6 +1346,137 @@
           "birthday": {
             "type": "string",
             "format": "date"
+          },
+          "projectusergroup": {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "project": {
+                "type": "string"
+              },
+              "projectrole": {
+                "type": "string"
+              },
+              "accessFolder": {
+                "type": "object"
+              },
+              "accessFile": {
+                "type": "object"
+              },
+              "users": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "published_at": {
+                "type": "string"
+              },
+              "created_by": {
+                "type": "string"
+              },
+              "updated_by": {
+                "type": "string"
+              }
+            }
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "sort": {
+                  "type": "integer"
+                },
+                "created": {
+                  "type": "string"
+                },
+                "tilesetData": {
+                  "type": "object"
+                },
+                "isActive": {
+                  "type": "boolean"
+                },
+                "metadata": {
+                  "type": "object"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "desc": {
+                  "type": "string"
+                },
+                "coordinateSystem": {
+                  "type": "string"
+                },
+                "elevationSystem": {
+                  "type": "string"
+                },
+                "isPublic": {
+                  "type": "boolean"
+                },
+                "treeData": {
+                  "type": "object"
+                },
+                "isDeleted": {
+                  "type": "boolean"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "headingRotation": {
+                  "type": "number"
+                },
+                "isOrganizationTemplate": {
+                  "type": "boolean"
+                },
+                "isSystemTemplate": {
+                  "type": "boolean"
+                },
+                "decidimConnector": {
+                  "type": "object"
+                },
+                "storage": {
+                  "type": "number"
+                },
+                "thumbnailFromViewpoint": {
+                  "type": "boolean"
+                },
+                "cloneData": {
+                  "type": "object"
+                },
+                "reportSetting": {
+                  "type": "object"
+                },
+                "users": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -1416,6 +1547,15 @@
           "birthday": {
             "type": "string",
             "format": "date"
+          },
+          "projectusergroup": {
+            "type": "string"
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "created_by": {
             "type": "string"
