@@ -1,8 +1,11 @@
 'use strict';
 
 const { sanitizeEntity } = require("strapi-utils/lib");
-const { searchTreeNode, shortenTree, setTitleRoot , searchTreeNodeForTowParents} = require("../../../tree");
-
+const { searchTreeNode, shortenTree, setTitleRoot, searchTreeNodeForTowParents } = require("../../../tree");
+const ogr2ogr = require('ogr2ogr').default;
+const axios = require('axios');
+const { exec } = require('child_process');
+const fs = require('fs');
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
@@ -197,7 +200,7 @@ module.exports = {
     return [...data.data];
   },
   async getTreeGuid(ctx) {
-    const { guids, fileid , modelType} = ctx.request.body;
+    const { guids, fileid, modelType } = ctx.request.body;
     let rootNodes = [];
     const getDataGuid = async (guid) => {
       let data = await strapi.query('objectinfo').model.aggregate([
@@ -438,7 +441,7 @@ module.exports = {
           $match: {
             $and: [
               { fileid },
-              { parent : ObjectId("ffffffffffffffffffffffff") },
+              { parent: ObjectId("ffffffffffffffffffffffff") },
               { type: { $ne: 5 } }
             ]
           }
@@ -662,11 +665,11 @@ module.exports = {
       let data = shortenTree(modelType, [...allParentGuid], "", [], 0, "")
       let twoParent = searchTreeNodeForTowParents(data.data, guidSearch[0].key.toString())?.filter(x => x) || [];
       twoParent.map(item => {
-        if(item.GUID){
+        if (item.GUID) {
           newGuids.push(item.GUID)
         }
       })
-      if(!newGuids.includes(guids)){
+      if (!newGuids.includes(guids)) {
         newGuids.push(guids)
       }
       await Promise.all(newGuids.map(async guid => {
@@ -737,5 +740,48 @@ module.exports = {
       sanitizeEntity(entity, { model: strapi.models.objectinfo })
     );
     return entities
+  },
+  async getOrg2Org(ctx) {
+    // const cmd = 'ogr2ogr -f "PostgreSQL" PG:"host=localhost user=postgres password=2510 dbname=xdtwin" https://obt-test-eu.s3.eu-west-1.amazonaws.com/SHP_Export_01_29fb8ea2c8.zip -nln geoserver -nlt PROMOTE_TO_MULTI -overwrite';
+    // const geojson = await ogr2ogr("https://obt-test-eu.s3.eu-west-1.amazonaws.com/SHP_Export_01_29fb8ea2c8.zip", {options: ['-t_srs', 'EPSG:4326']})
+    // exec(cmd, (error, stdout, stderr) => {
+    //   if (error) {
+    //     console.error(`Error: ${error.message}`);
+    //     return;
+    //   }
+    //   if (stderr) {
+    //     console.error(`stderr: ${stderr}`);
+    //     return;
+    //   }
+    //   console.log(`stdout: ${stdout}`);
+    // });
+
+    // if(geojson.data?.crs) {
+    //   delete geojson.data.crs
+    // }
+    // return geojson.data
+    const inputFile = 'https://obt-test-eu.s3.eu-west-1.amazonaws.com/SHP_Export_01_29fb8ea2c8.zip';
+    const outputFile = 'SHP_Export_01_29fb8ea2c8.shp';
+
+    // Download the shapefile using axios
+    await axios({
+      method: 'get',
+      url: inputFile,
+      responseType: 'stream'
+    }).then(response => {
+      const stream = response.data.pipe(fs.createWriteStream(outputFile));
+      stream.on('finish', () => {
+        // Use ogr2ogr to load the shapefile into PostGIS
+        exec(`ogr2ogr -f "PostgreSQL" PG:"host=localhost: user=postgres password=2510 dbname=xdtwin" ${outputFile} -nln geoserver -nlt PROMOTE_TO_MULTI -overwrite`, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`ogr2ogr error: ${error}`);
+            return;
+          }
+          console.log(`ogr2ogr output: ${stdout}`);
+        });
+      });
+    }).catch(error => {
+      console.error(`axios error: ${error}`);
+    });
   }
 };

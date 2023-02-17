@@ -108,6 +108,15 @@
         "policies": [],
         "prefix": ""
       }
+    },
+    {
+      "method": "POST",
+      "path": "/createNewUser",
+      "handler": "User.createNewUser",
+      "config": {
+        "policies": [],
+        "prefix": ""
+      }
     }
   ]
 }

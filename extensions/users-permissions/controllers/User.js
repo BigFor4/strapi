@@ -3,6 +3,7 @@ const { sanitizeEntity } = require('strapi-utils');
 const _ = require('lodash');
 const moment = require('moment');
 const bcrypt = require("bcryptjs")
+const axios = require('axios')
 
 const sanitizeUser = user =>
   sanitizeEntity(user, {
@@ -369,5 +370,28 @@ module.exports = {
         }
       }
     }
+  },
+  async createNewUser(ctx) {
+    const { id } = ctx.params;
+    const { email , username , password ,address, city, country, phone, zipCode } = ctx.request.body
+    const user = ctx.state.user;
+    if (!user) return ctx.unauthorized();
+    let userParam = {
+      email , username , password ,address, city, country, phone, zipCode , isActive : true
+    }
+    const config = {
+      method: 'post',
+      url: `${process.env.API_URL}/auth/local/register`,
+      data: userParam
+    };
+    let newUser = await axios(config)
+      .then(function (response) {
+          return response.data?.user
+      })
+      .catch(function (error) {
+        return error
+      });
+    if(!newUser._id) return ctx.notFound(newUser);
+    return newUser
   }
 };

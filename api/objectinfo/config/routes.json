@@ -79,6 +79,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "GET",
+      "path": "/getOrg2Org",
+      "handler": "objectinfo.getOrg2Org",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }
