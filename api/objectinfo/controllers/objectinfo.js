@@ -742,8 +742,8 @@ module.exports = {
     return entities
   },
   async getOrg2Org(ctx) {
-    // const cmd = 'ogr2ogr -f "PostgreSQL" PG:"host=localhost user=postgres password=2510 dbname=xdtwin" https://obt-test-eu.s3.eu-west-1.amazonaws.com/SHP_Export_01_29fb8ea2c8.zip -nln geoserver -nlt PROMOTE_TO_MULTI -overwrite';
-    // const geojson = await ogr2ogr("https://obt-test-eu.s3.eu-west-1.amazonaws.com/SHP_Export_01_29fb8ea2c8.zip", {options: ['-t_srs', 'EPSG:4326']})
+    const cmd = 'ogr2ogr -f "PostgreSQL" PG:"host=localhost user=postgres password=2510 dbname=xdtwin" https://obt-test-eu.s3.eu-west-1.amazonaws.com/SHP_Export_01_29fb8ea2c8.zip -nln geoserver -nlt PROMOTE_TO_MULTI -overwrite';
+    const geojson = await ogr2ogr("https://obt-test-eu.s3.eu-west-1.amazonaws.com/SHP_Export_01_29fb8ea2c8.zip", {options: ['-t_srs', 'EPSG:4326']})
     // exec(cmd, (error, stdout, stderr) => {
     //   if (error) {
     //     console.error(`Error: ${error.message}`);
@@ -756,32 +756,32 @@ module.exports = {
     //   console.log(`stdout: ${stdout}`);
     // });
 
-    // if(geojson.data?.crs) {
-    //   delete geojson.data.crs
-    // }
-    // return geojson.data
-    const inputFile = 'https://obt-test-eu.s3.eu-west-1.amazonaws.com/SHP_Export_01_29fb8ea2c8.zip';
-    const outputFile = 'SHP_Export_01_29fb8ea2c8.shp';
+    if(geojson.data?.crs) {
+      delete geojson.data.crs
+    }
+    return geojson.data
+    // const inputFile = 'https://obt-test-eu.s3.eu-west-1.amazonaws.com/SHP_Export_01_29fb8ea2c8.zip';
+    // const outputFile = 'SHP_Export_01_29fb8ea2c8.shp';
 
-    // Download the shapefile using axios
-    await axios({
-      method: 'get',
-      url: inputFile,
-      responseType: 'stream'
-    }).then(response => {
-      const stream = response.data.pipe(fs.createWriteStream(outputFile));
-      stream.on('finish', () => {
-        // Use ogr2ogr to load the shapefile into PostGIS
-        exec(`ogr2ogr -f "PostgreSQL" PG:"host=localhost: user=postgres password=2510 dbname=xdtwin" ${outputFile} -nln geoserver -nlt PROMOTE_TO_MULTI -overwrite`, (error, stdout, stderr) => {
-          if (error) {
-            console.error(`ogr2ogr error: ${error}`);
-            return;
-          }
-          console.log(`ogr2ogr output: ${stdout}`);
-        });
-      });
-    }).catch(error => {
-      console.error(`axios error: ${error}`);
-    });
+    // // Download the shapefile using axios
+    // await axios({
+    //   method: 'get',
+    //   url: inputFile,
+    //   responseType: 'stream'
+    // }).then(response => {
+    //   const stream = response.data.pipe(fs.createWriteStream(outputFile));
+    //   stream.on('finish', () => {
+    //     // Use ogr2ogr to load the shapefile into PostGIS
+    //     exec(`ogr2ogr -f "PostgreSQL" PG:"host=localhost: user=postgres password=2510 dbname=xdtwin" ${outputFile} -nln geoserver -nlt PROMOTE_TO_MULTI -overwrite`, (error, stdout, stderr) => {
+    //       if (error) {
+    //         console.error(`ogr2ogr error: ${error}`);
+    //         return;
+    //       }
+    //       console.log(`ogr2ogr output: ${stdout}`);
+    //     });
+    //   });
+    // }).catch(error => {
+    //   console.error(`axios error: ${error}`);
+    // });
   }
 };

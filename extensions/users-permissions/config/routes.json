@@ -117,6 +117,24 @@
         "policies": [],
         "prefix": ""
       }
+    },
+    {
+      "method": "POST",
+      "path": "/meusersmmePost",
+      "handler": "User.meusersmmePost",
+      "config": {
+        "policies": [],
+        "prefix": ""
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/meusersmme",
+      "handler": "User.meusersmme",
+      "config": {
+        "policies": [],
+        "prefix": ""
+      }
     }
   ]
 }

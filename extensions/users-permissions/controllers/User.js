@@ -29,6 +29,32 @@ module.exports = {
     const data = sanitizeUser(userWithMedia, { model: userQuery.model });
     ctx.send(data);
   },
+  async meusersmme(ctx) {
+    const user = ctx.state.user;
+
+    if (!user) {
+      return ctx.badRequest(null, [{ messages: [{ id: 'No authorization header was found' }] }]);
+    }
+
+    const userQuery = await strapi.query('user', 'users-permissions');
+    const userWithMedia = await userQuery.findOne({ id: ctx.state.user.id });
+
+    const data = sanitizeUser(userWithMedia, { model: userQuery.model });
+    ctx.send(data);
+  },
+  async meusersmmePost(ctx) {
+    const user = ctx.state.user;
+
+    if (!user) {
+      return ctx.badRequest(null, [{ messages: [{ id: 'No authorization header was found' }] }]);
+    }
+
+    const userQuery = await strapi.query('user', 'users-permissions');
+    const userWithMedia = await userQuery.findOne({ id: ctx.state.user.id });
+
+    const data = sanitizeUser(userWithMedia, { model: userQuery.model });
+    ctx.send(data);
+  },
   async delete(ctx) {
     try {
       const token = await strapi.query('token').findOne({ id: ctx.params.id })
